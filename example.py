@@ -9,8 +9,8 @@ from simulation import Simulation
 
 class ThreeGene(Simulation):
 
-    def __init__(self, param=None, sim_name="example", print_log=False):
-        super().__init__(param=param, sim_name=sim_name, print_log=print_log)
+    def __init__(self, param=None, sim_name="example", print_log=False, log_name="example"):
+        super().__init__(param=param, sim_name=sim_name, print_log=print_log, log_name=log_name)
         self.cross_sex_ratio = self.params.CROSS_SEX_RATION
         self.pregnant_per_litter = self.params.PREGNANT_PER_LITTER
         self.inbred_father_num = self.params.INBRED_FATHER_NUM
@@ -178,13 +178,21 @@ class ThreeGene(Simulation):
 
 def single_thread(t_id=0):
     print_log = t_id == 0
-    three_gene = ThreeGene(param="example", sim_name=f"five_gene_{i}", print_log=print_log)
+    three_gene = ThreeGene(
+        param="example",
+        sim_name="five_gene",
+        print_log=print_log,
+        log_name=f"five_gene_{i}"
+    )
     three_gene.run()
 
 
 if __name__ == "__main__":
+    # create common files by one thread first
+    single_thread()
+    # then run multi thread simulation
     processes = []
-    for i in range(64):
+    for i in range(1, 64):
         p = multiprocessing.Process(target=single_thread, args=(i,))
         processes.append(p)
         p.start()

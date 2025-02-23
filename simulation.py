@@ -8,7 +8,7 @@ from maorkov import Sample, Population, Cross
 
 class Simulation:
 
-    def __init__(self, param=None, sim_name="example", print_log=False):
+    def __init__(self, param=None, sim_name="example", print_log=False, log_name="example"):
         # logger
         logging.basicConfig(
             level=logging.INFO,
@@ -20,7 +20,7 @@ class Simulation:
         current = os.path.abspath(__file__)
         current_dir = os.path.dirname(current)
         self.tmp_path = os.path.join(current_dir, "tmp", sim_name)
-        self.output_path = os.path.join(current_dir, "output", sim_name + ".log")
+        self.output_path = os.path.join(current_dir, "output", log_name + ".log")
         for path in [self.tmp_path, self.output_path]:
             if not os.path.exists(path):
                 os.makedirs(self.tmp_path, exist_ok=True)
