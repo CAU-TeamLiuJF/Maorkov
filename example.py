@@ -182,7 +182,7 @@ def single_thread(t_id=0):
         param="example",
         sim_name="five_gene",
         print_log=print_log,
-        log_name=f"five_gene_{i}"
+        log_name=f"five_gene_{t_id}"
     )
     three_gene.run()
 
