@@ -24,4 +24,4 @@ RECURSIVE_FATHER_NUM_LIST = list(range(3, 11))
 # recursive cross max generation
 RECURSIVE_MAX_GENERATION = 10
 # father numer budget
-FATHER_BUDGET = 35
+FATHER_BUDGET = 50
