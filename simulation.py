@@ -20,10 +20,11 @@ class Simulation:
         current = os.path.abspath(__file__)
         current_dir = os.path.dirname(current)
         self.tmp_path = os.path.join(current_dir, "tmp", sim_name)
-        self.output_path = os.path.join(current_dir, "output", log_name + ".log")
+        self.output_path = os.path.join(current_dir, "output", sim_name)
         for path in [self.tmp_path, self.output_path]:
             if not os.path.exists(path):
-                os.makedirs(self.tmp_path, exist_ok=True)
+                os.makedirs(path, exist_ok=True)
+        self.output_path = os.path.join(self.output_path, log_name + ".log")
         # handle parameters
         self.params = importlib.import_module(f"params.{param}")
         self.total_gene_num = self.params.TOTAL_GENE_NUM
