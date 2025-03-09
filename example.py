@@ -7,7 +7,7 @@ from maorkov import Cross
 from simulation import Simulation
 
 
-class ThreeGene(Simulation):
+class Example(Simulation):
 
     def __init__(self, param=None, sim_name="example", print_log=False, log_name="example"):
         super().__init__(param=param, sim_name=sim_name, print_log=print_log, log_name=log_name)
@@ -178,13 +178,13 @@ class ThreeGene(Simulation):
 
 def single_thread(t_id=0):
     print_log = t_id == 0
-    three_gene = ThreeGene(
+    five_gene = Example(
         param="example",
         sim_name="five_gene",
         print_log=print_log,
         log_name=f"five_gene_{t_id}"
     )
-    three_gene.run()
+    five_gene.run()
 
 
 if __name__ == "__main__":
