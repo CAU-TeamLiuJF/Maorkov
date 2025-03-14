@@ -1,4 +1,5 @@
 import os
+import time
 import multiprocessing
 
 import joblib
@@ -192,7 +193,8 @@ if __name__ == "__main__":
     single_thread()
     # then run multi thread simulation
     processes = []
-    for i in range(1, 128):
+    for i in range(1, 64):
+        time.sleep(10)
         p = multiprocessing.Process(target=single_thread, args=(i,))
         processes.append(p)
         p.start()
