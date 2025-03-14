@@ -193,7 +193,7 @@ if __name__ == "__main__":
     single_thread()
     # then run multi thread simulation
     processes = []
-    for i in range(1, 64):
+    for i in range(1, 16):
         single_thread(t_id=i)
     #     time.sleep(10)
     #     print(f"Process {i} started")
