@@ -16,6 +16,7 @@ class Simulation:
         )
         self.logger = logging.getLogger(__name__)
         self.print_log = print_log
+        self.log_name = log_name
         # path
         current = os.path.abspath(__file__)
         current_dir = os.path.dirname(current)
@@ -47,7 +48,7 @@ class Simulation:
         :param msg: str
         """
         if self.print_log:
-            self.logger.info(msg)
+            self.logger.info(f"[{self.log_name}]{msg}")
 
     def write_output(self, msg=None):
         with open(os.path.join(self.output_path), "a") as f:

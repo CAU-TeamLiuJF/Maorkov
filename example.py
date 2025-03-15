@@ -178,11 +178,11 @@ class Example(Simulation):
 
 
 def single_thread(t_id=0):
-    print_log = t_id == 0
+    # print_log = t_id == 0
     five_gene = Example(
         param="example",
         sim_name="five_gene",
-        print_log=print_log,
+        print_log=True,
         log_name=f"five_gene_{t_id}"
     )
     five_gene.run()
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     single_thread()
     # then run multi thread simulation
     processes = []
-    for i in range(1, 16):
+    for i in range(1, 64):
         single_thread(t_id=i)
     #     time.sleep(10)
     #     print(f"Process {i} started")
