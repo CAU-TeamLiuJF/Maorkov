@@ -156,7 +156,7 @@ class Example(Simulation):
             log_msg.append(f"Father number list: {next_father_num_list}.")
             log_msg.append("=" * 50)
             self.log("\n".join(log_msg))
-            if check_success == 'Success' or 'Failure' in check_success:
+            if check_success == 'Success' or 'Continue' in check_success:
                 self.write_output(";".join([
                     check_success,
                     str(next_generation),
@@ -165,13 +165,13 @@ class Example(Simulation):
                     ",".join(map(str, next_father_num_list))
                 ]))
             # check_success == 'Continue':
-            self.recursion(
-                pop=progeny_pop,
-                generation=next_generation,
-                target_freq_list=next_target_freq_list,
-                bg_freq_list=next_bg_freq_list,
-                father_num_list=next_father_num_list
-            )
+                self.recursion(
+                    pop=progeny_pop,
+                    generation=next_generation,
+                    target_freq_list=next_target_freq_list,
+                    bg_freq_list=next_bg_freq_list,
+                    father_num_list=next_father_num_list
+                )
             # else:
             #     raise RuntimeError(check_success)
 
