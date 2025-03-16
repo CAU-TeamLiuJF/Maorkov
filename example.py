@@ -164,17 +164,16 @@ class Example(Simulation):
                     ",".join(map(str, next_bg_freq_list)),
                     ",".join(map(str, next_father_num_list))
                 ]))
-                return check_success
-            elif check_success == 'Continue':
-                self.recursion(
-                    pop=progeny_pop,
-                    generation=next_generation,
-                    target_freq_list=next_target_freq_list,
-                    bg_freq_list=next_bg_freq_list,
-                    father_num_list=next_father_num_list
-                )
-            else:
-                raise RuntimeError(check_success)
+            # check_success == 'Continue':
+            self.recursion(
+                pop=progeny_pop,
+                generation=next_generation,
+                target_freq_list=next_target_freq_list,
+                bg_freq_list=next_bg_freq_list,
+                father_num_list=next_father_num_list
+            )
+            # else:
+            #     raise RuntimeError(check_success)
 
 
 def single_thread(t_id=0):
