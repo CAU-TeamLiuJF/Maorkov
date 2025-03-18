@@ -156,7 +156,7 @@ class Example(Simulation):
             log_msg.append(f"Father number list: {next_father_num_list}.")
             log_msg.append("=" * 50)
             self.log("\n".join(log_msg))
-            if check_success == 'Success' or 'Continue' in check_success:
+            if check_success == 'Success' or 'Failure' in check_success:
                 self.write_output(";".join([
                     check_success,
                     str(next_generation),
@@ -164,7 +164,7 @@ class Example(Simulation):
                     ",".join(map(str, next_bg_freq_list)),
                     ",".join(map(str, next_father_num_list))
                 ]))
-            # check_success == 'Continue':
+            elif check_success == 'Continue':
                 self.recursion(
                     pop=progeny_pop,
                     generation=next_generation,
@@ -172,8 +172,8 @@ class Example(Simulation):
                     bg_freq_list=next_bg_freq_list,
                     father_num_list=next_father_num_list
                 )
-            # else:
-            #     raise RuntimeError(check_success)
+            else:
+                raise RuntimeError(check_success)
 
 
 def single_thread(t_id=0):
@@ -191,9 +191,9 @@ if __name__ == "__main__":
     # create common files by one thread first
     single_thread()
     # then run multi thread simulation
-    processes = []
-    for i in range(1, 64):
-        single_thread(t_id=i)
+    # processes = []
+    # for i in range(1, 64):
+    #     single_thread(t_id=i)
     #     time.sleep(10)
     #     print(f"Process {i} started")
     #     p = multiprocessing.Process(target=single_thread, args=(i,))
