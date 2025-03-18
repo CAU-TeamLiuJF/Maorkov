@@ -191,15 +191,15 @@ if __name__ == "__main__":
     # create common files by one thread first
     single_thread()
     # then run multi thread simulation
-    # processes = []
-    # for i in range(1, 64):
-    #     single_thread(t_id=i)
-    #     time.sleep(10)
-    #     print(f"Process {i} started")
-    #     p = multiprocessing.Process(target=single_thread, args=(i,))
-    #     processes.append(p)
-    #     p.start()
-    #
-    # for p in processes:
-    #     p.join()  # 等待所有进程结束
-    # print("所有进程运行完成")
+    processes = []
+    for i in range(1, 64):
+        single_thread(t_id=i)
+        time.sleep(10)
+        print(f"Process {i} started")
+        p = multiprocessing.Process(target=single_thread, args=(i,))
+        processes.append(p)
+        p.start()
+
+    for p in processes:
+        p.join()  # 等待所有进程结束
+    print("所有进程运行完成")
