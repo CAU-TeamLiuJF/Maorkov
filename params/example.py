@@ -22,6 +22,6 @@ BACK_CROSS_FATHER_NUM = 50
 # recursive cross father number
 RECURSIVE_FATHER_NUM_LIST = list(range(3, 8))
 # recursive cross max generation
-RECURSIVE_MAX_GENERATION = 5
+RECURSIVE_MAX_GENERATION = 6
 # father numer budget
 FATHER_BUDGET = 50
