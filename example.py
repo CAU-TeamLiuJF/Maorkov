@@ -108,8 +108,8 @@ class Example(Simulation):
             background_gene_freq=None,
             father_num_list=None
     ):
-        if (target_gene_freq >= self.target_gene_threshold and
-                background_gene_freq >= self.bg_gene_all_positive_threshold):
+        if (target_gene_freq >= 1 and
+                background_gene_freq >= 1):
             return 'Success'
         if generation >= self.recursive_max_generation:
             return 'Failure(GenerationExceeded)'
