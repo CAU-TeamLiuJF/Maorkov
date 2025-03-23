@@ -132,7 +132,7 @@ class Example(Simulation):
         if target_freq_list is None:
             target_freq_list = [pop.avg_target_gene_frequency]
         if bg_freq_list is None:
-            bg_freq_list = [pop.avg_bg_gene_frequency]
+            bg_freq_list = [pop.bg_gene_all_positive_percent]
         if father_num_list is None:
             father_num_list = []
         for father_num in self.recursive_father_num_list:
@@ -142,7 +142,7 @@ class Example(Simulation):
                 pop_name=f"recursive_cross_pop_{generation}"
             )
             target_gene_freq = progeny_pop.avg_target_gene_frequency
-            background_gene_freq = progeny_pop.avg_bg_gene_frequency
+            background_gene_freq = progeny_pop.bg_gene_all_positive_percent
             next_target_freq_list = target_freq_list + [target_gene_freq]
             next_bg_freq_list = bg_freq_list + [background_gene_freq]
             next_father_num_list = father_num_list + [father_num]
