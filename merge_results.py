@@ -1,3 +1,4 @@
+import joblib
 import numpy as np
 from tqdm import tqdm
 
@@ -6,7 +7,7 @@ from params.example import FATHER_BUDGET, RECURSIVE_FATHER_NUM_LIST
 output_dir = "output/matrix"
 result_dir = "output/data/five_gene"
 result_name = "five_gene"
-repeat_num = 64
+repeat_num = 256
 
 stage_num = 10
 start = 0
@@ -23,7 +24,7 @@ def get_progress_index(s):
         if start_j <= s < end_j:
             return j
 
-transition_matrix_dict = {a: np.zeros((stage_num + 1, stage_num + 1)) for a in RECURSIVE_FATHER_NUM_LIST}
+transition_matrix_dict = {a * 100: np.zeros((stage_num + 1, stage_num + 1)) for a in RECURSIVE_FATHER_NUM_LIST}
 for r_id in tqdm(range(repeat_num)):
 
     result_file = f"{result_dir}/{result_name}_{r_id}.log"
@@ -41,9 +42,13 @@ for r_id in tqdm(range(repeat_num)):
                 father_num = int(father_list[i])
                 start_stage = get_progress_index(start_gene)
                 end_stage = get_progress_index(end_gene)
-                transition_matrix_dict[father_num][start_stage, end_stage] += 1
+                transition_matrix_dict[father_num * 100][start_stage, end_stage] += 1
 
 for a in transition_matrix_dict:
-    # transition_matrix_dict[a] = transition_matrix_dict[a] / transition_matrix_dict[a].sum(axis=1).reshape(-1, 1)
+    print(transition_matrix_dict[a].shape)
+    transition_matrix_dict[a] = transition_matrix_dict[a] / np.sum(transition_matrix_dict[a])
+    transition_matrix_dict[a] = transition_matrix_dict[a] / transition_matrix_dict[a].sum(axis=1).reshape(-1, 1)
+    transition_matrix_dict[a] = np.nan_to_num(transition_matrix_dict[a])
     np.savetxt(f'{output_dir}/W_{a}.csv', transition_matrix_dict[a], fmt='%f', delimiter=',')
 
+joblib.dump(transition_matrix_dict, 'output/transition_matrix.pkl')

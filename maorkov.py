@@ -258,6 +258,23 @@ class Population:
         return np.average(self.background_gene_frequency)
 
     @property
+    def bg_gene_all_positive_percent(self):
+        """
+        Get percentage of background gene positive(1 or 2) in population
+        :return:
+        """
+        bg_gene_all_positive_list = []
+        for sample in self.sample_list:
+            bg_gene_all_positive = 1
+            for gene in range(self.gene_num):
+                position = np.array([gene])
+                genotype_sum = sample.get_genotype_sum(position=position)
+                if genotype_sum == 0:
+                    bg_gene_all_positive = 0
+            bg_gene_all_positive_list.append(bg_gene_all_positive)
+        return sum(bg_gene_all_positive_list) / len(bg_gene_all_positive_list)
+
+    @property
     def target_gene_frequency(self):
         """
         Get frequency of target gene in population

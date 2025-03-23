@@ -18,6 +18,8 @@ class Example(Simulation):
         self.back_cross_father_num = self.params.BACK_CROSS_FATHER_NUM
         self.recursive_father_num_list = self.params.RECURSIVE_FATHER_NUM_LIST
         self.recursive_max_generation = self.params.RECURSIVE_MAX_GENERATION
+        self.target_gene_threshold = self.params.TARGET_GENE_THRESHOLD
+        self.bg_gene_all_positive_threshold = self.params.BG_GENE_ALL_POSITIVE_THRESHOLD
         self.father_budget = self.params.FATHER_BUDGET
         self.f1_pop, self.f1_receptor_inbred = self.get_f1()
         self.log(self.f1_pop)
@@ -79,7 +81,7 @@ class Example(Simulation):
             background_gene_idx=self.background_gene_idx,
         )
         # back cross twice
-        for i in range(1):
+        for i in range(2):
             back_cross_receptor_pop1, back_cross_receptor_pop2 = self.f1_receptor_inbred.half_divide_pop()
             self.f1_pop = back_cross.cross(
                 father_pop=self.f1_pop,
@@ -94,22 +96,25 @@ class Example(Simulation):
             )
             self.log(self.f1_pop)
             self.log(self.f1_receptor_inbred)
-            joblib.dump(self.f1_pop, back_cross_pop_file)
-            joblib.dump(self.f1_receptor_inbred, back_cross_inbred_pop_file)
+        joblib.dump(self.f1_pop, back_cross_pop_file)
+        joblib.dump(self.f1_receptor_inbred, back_cross_inbred_pop_file)
+        # raise Exception('sadasa')
         return self.f1_pop, self.f1_receptor_inbred
 
     def check_success(
             self,
             generation=1,
             target_gene_freq=None,
+            background_gene_freq=None,
             father_num_list=None
     ):
-        if generation > self.recursive_max_generation:
+        if (target_gene_freq >= self.target_gene_threshold and
+                background_gene_freq >= self.bg_gene_all_positive_threshold):
+            return 'Success'
+        if generation >= self.recursive_max_generation:
             return 'Failure(GenerationExceeded)'
         if sum(father_num_list) > self.father_budget:
             return 'Failure(FatherBudgetExceeded)'
-        if target_gene_freq >= 1:
-            return 'Success'
         return 'Continue'
 
     def run(self):
@@ -136,19 +141,19 @@ class Example(Simulation):
                 father_num=father_num,
                 pop_name=f"recursive_cross_pop_{generation}"
             )
-            next_generation = generation + 1
             target_gene_freq = progeny_pop.avg_target_gene_frequency
             background_gene_freq = progeny_pop.avg_bg_gene_frequency
             next_target_freq_list = target_freq_list + [target_gene_freq]
             next_bg_freq_list = bg_freq_list + [background_gene_freq]
             next_father_num_list = father_num_list + [father_num]
             check_success = self.check_success(
-                generation=next_generation,
+                generation=generation,
                 target_gene_freq=target_gene_freq,
+                background_gene_freq=background_gene_freq,
                 father_num_list=next_father_num_list
             )
             log_msg = [
-                f"Generation {next_generation}: ",
+                f"Generation {generation}: ",
             ]
             log_msg[0] += f"{check_success}."
             log_msg.append(f"Target freq list: {next_target_freq_list}.")
@@ -159,12 +164,13 @@ class Example(Simulation):
             if check_success == 'Success' or 'Failure' in check_success:
                 self.write_output(";".join([
                     check_success,
-                    str(next_generation),
+                    str(generation),
                     ",".join(map(str, next_target_freq_list)),
                     ",".join(map(str, next_bg_freq_list)),
                     ",".join(map(str, next_father_num_list))
                 ]))
             elif check_success == 'Continue':
+                next_generation = generation + 1
                 self.recursion(
                     pop=progeny_pop,
                     generation=next_generation,
