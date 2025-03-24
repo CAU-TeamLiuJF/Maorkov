@@ -3,7 +3,7 @@ TOTAL_GENE_NUM = 100
 # target gene number
 TARGET_GENE_NUM = 5
 # max recombination rate
-MAX_RECOMBINATION_RATE = 0.1
+MAX_RECOMBINATION_RATE = 0.5
 # initial donor population number
 INITIAL_DONOR_NUM = 100
 # initial receptor population number
