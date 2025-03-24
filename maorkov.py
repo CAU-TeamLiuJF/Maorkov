@@ -268,7 +268,7 @@ class Population:
             all_gene_positive = 0
             for gene in range(self.gene_num):
                 position = np.array([gene])
-                genotype_sum = sum(sample.get_genotype(position=position))
+                genotype_sum = sample.get_genotype_sum(position=position)
                 if genotype_sum > 0:
                     all_gene_positive += 1
             all_gene_positive_rate = all_gene_positive / self.gene_num
