@@ -261,7 +261,7 @@ class Population:
     def bg_gene_all_positive_percent(
             self,
             first=100,
-            threshold=0.95,
+            threshold=0.90,
             sort_priority="TargetGeneFirst"
     ):
         """
