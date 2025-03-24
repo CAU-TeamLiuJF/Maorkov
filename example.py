@@ -125,10 +125,13 @@ class Example(Simulation):
             self,
             pop=None,
             generation=1,
+            all_gene_list=None,
             target_freq_list=None,
             bg_freq_list=None,
             father_num_list=None
     ):
+        if all_gene_list is None:
+            all_gene_list = [pop.avg_all_gene_positive_rate]
         if target_freq_list is None:
             target_freq_list = [pop.avg_target_gene_frequency]
         if bg_freq_list is None:
@@ -143,6 +146,8 @@ class Example(Simulation):
             )
             target_gene_freq = progeny_pop.avg_target_gene_frequency
             background_gene_freq = progeny_pop.bg_gene_all_positive_percent
+            all_gene_positive_rate = progeny_pop.avg_all_gene_positive_rate
+            next_all_gene_list = all_gene_list + [all_gene_positive_rate]
             next_target_freq_list = target_freq_list + [target_gene_freq]
             next_bg_freq_list = bg_freq_list + [background_gene_freq]
             next_father_num_list = father_num_list + [father_num]
@@ -158,6 +163,7 @@ class Example(Simulation):
             log_msg[0] += f"{check_success}."
             log_msg.append(f"Target freq list: {next_target_freq_list}.")
             log_msg.append(f"Background freq list: {next_bg_freq_list}.")
+            log_msg.append(f"All gene positive rate list: {next_all_gene_list}.")
             log_msg.append(f"Father number list: {next_father_num_list}.")
             log_msg.append("=" * 50)
             self.log("\n".join(log_msg))
@@ -165,6 +171,7 @@ class Example(Simulation):
                 self.write_output(";".join([
                     check_success,
                     str(generation),
+                    ",".join(map(str, next_all_gene_list)),
                     ",".join(map(str, next_target_freq_list)),
                     ",".join(map(str, next_bg_freq_list)),
                     ",".join(map(str, next_father_num_list))
@@ -174,6 +181,7 @@ class Example(Simulation):
                 self.recursion(
                     pop=progeny_pop,
                     generation=next_generation,
+                    all_gene_list=next_all_gene_list,
                     target_freq_list=next_target_freq_list,
                     bg_freq_list=next_bg_freq_list,
                     father_num_list=next_father_num_list
