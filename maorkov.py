@@ -2,9 +2,73 @@ import numpy as np
 import random
 import time
 import uuid
-
+import importlib
+import os
+import joblib
 from collections import Counter
 from tqdm import tqdm
+
+
+class Params:
+    """
+    A singleton class to hold the parameters.
+    """
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Params, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self, param_name="example"):
+        # path
+        current = os.path.abspath(__file__)
+        current_dir = os.path.dirname(current)
+        self.tmp_path = os.path.join(current_dir, "tmp", param_name)
+        self.output_path = os.path.join(current_dir, "output", param_name)
+        # handle parameters
+        self.params = importlib.import_module(f"params.{param_name}")
+        self.total_gene_num = self.params.TOTAL_GENE_NUM
+        self.target_gene_num = self.params.TARGET_GENE_NUM
+        self.target_gene_idx, self.background_gene_idx = self.get_gene_idx()
+        self.max_recombination_rate = self.params.MAX_RECOMBINATION_RATE
+        self.recombination_rate = self.get_recombination_rate()
+
+    def get_gene_idx(self):
+        """
+        Get the index of target gene and background gene.
+        :return: np.array, np.array
+        """
+        target_gene_idx_file = os.path.join(self.tmp_path, "target_gene_idx.pkl")
+        background_gene_idx_file = os.path.join(self.tmp_path, "background_gene_idx.pkl")
+        if os.path.exists(target_gene_idx_file) and os.path.exists(background_gene_idx_file):
+            print(f'Reuse existing target gene idx...')
+            return joblib.load(target_gene_idx_file), joblib.load(background_gene_idx_file)
+        else:
+            gene_idx = np.arange(self.total_gene_num)
+            np.random.shuffle(gene_idx)
+            target_gene_idx = gene_idx[:self.target_gene_num]
+            background_gene_idx = gene_idx[self.target_gene_num:]
+            joblib.dump(target_gene_idx, target_gene_idx_file)
+            joblib.dump(background_gene_idx, background_gene_idx_file)
+            return target_gene_idx, background_gene_idx
+
+    def get_recombination_rate(self):
+        """
+        Get recombination rate
+        The recombination rate is randomly generated from 0 to the max_recombination_rate
+        :return: np.array
+        """
+        recombination_rate_file = os.path.join(self.tmp_path, "recombination_rate.pkl")
+        if os.path.exists(recombination_rate_file):
+            self.log(f'Reuse existing recombination rate...')
+            return joblib.load(recombination_rate_file)
+        else:
+            # save
+            recombination_rate = np.random.rand(self.total_gene_num, 1) * self.max_recombination_rate
+            joblib.dump(recombination_rate, recombination_rate_file)
+            return recombination_rate
 
 
 class Sample:
